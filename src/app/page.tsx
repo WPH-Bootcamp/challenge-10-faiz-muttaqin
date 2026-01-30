@@ -11,13 +11,20 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <main className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Blog App Challenge</h1>
+        <h1 className="text-3xl font-bold mb-8">Blog App</h1>
         
         {/* TODO: Implement blog posts list here */}
-        <div className="space-y-4">
-          <p className="text-gray-600">
-            Mulai implementasi homepage di sini sesuai dengan design Figma!
-          </p>
+        <div className="space-y-8">
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">Recommended Posts</h2>
+            {/* Recommended posts will be displayed here */}
+          </section>
+          
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">Most Liked Posts</h2>
+            {/* Most liked posts will be displayed here */}
+          </section>
+        </div>
         </div>
       </main>
     </div>
