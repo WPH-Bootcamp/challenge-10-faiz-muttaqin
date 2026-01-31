@@ -207,8 +207,8 @@ export default function MyProfilePage() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <div className="flex items-center justify-between mb-6">
-            <TabsList>
+          <div className="flex items-center justify-between mb-6 ">
+            <TabsList className="bg-transparent">
               <TabsTrigger value="posts">Your Post</TabsTrigger>
               <TabsTrigger value="password">Change Password</TabsTrigger>
             </TabsList>

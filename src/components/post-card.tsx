@@ -7,7 +7,7 @@ import type { Post } from "@/types/blog";
 import { Card, CardContent, CardFooter, CardHeader } from "@/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
 import { Badge } from "@/ui/badge";
-import { Heart, MessageCircle } from "lucide-react";
+import { ThumbsUp, MessageCircle } from "lucide-react";
 
 interface PostCardProps {
     post: Post;
@@ -60,7 +60,7 @@ export function PostCard({ post, compact = false }: PostCardProps) {
 
                 <div className="flex items-center gap-4 text-muted-foreground text-xs">
                     <div className="flex items-center gap-1">
-                        <Heart className="h-3 w-3" />
+                        <ThumbsUp className="h-3 w-3" />
                         <span>{post.likesCount}</span>
                     </div>
                     <div className="flex items-center gap-1">
@@ -78,7 +78,7 @@ export function PostCard({ post, compact = false }: PostCardProps) {
                 {/* Image on the left */}
                 {post.imageUrl && (
                     <Link href={`/posts/${post.id}`} className="flex-shrink-0">
-                        <div className="relative w-48 h-32 overflow-hidden rounded-lg">
+                        <div className="relative w-52 h-38 overflow-hidden rounded">
                             <Image
                                 src={post.imageUrl}
                                 alt={post.title}
@@ -120,31 +120,29 @@ export function PostCard({ post, compact = false }: PostCardProps) {
                     )}
 
                     {/* Footer - Author and Stats */}
-                    <div className="flex items-center justify-between mt-auto">
-                        <Link
-                            href={`/profile/${post.author.username}`}
-                            className="flex items-center gap-2 hover:opacity-80"
-                        >
-                            <Avatar className="h-6 w-6">
-                                <AvatarImage src={post.author.avatar} alt={post.author.username} />
-                                <AvatarFallback className="text-xs">
-                                    {post.author.username.slice(0, 2).toUpperCase()}
-                                </AvatarFallback>
-                            </Avatar>
-                            <span className="text-xs text-muted-foreground">
-                                {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
-                            </span>
-                        </Link>
+                    <Link
+                        href={`/profile/${post.author.username}`}
+                        className="flex items-center gap-2 hover:opacity-80 mb-2"
+                    >
+                        <Avatar className="h-8 w-8">
+                            <AvatarImage src={post.author.avatar} alt={post.author.username} />
+                            <AvatarFallback className="text-xs">
+                                {post.author.username.slice(0, 2).toUpperCase()}
+                            </AvatarFallback>
+                        </Avatar>
+                        <span className="text-xs text-muted-foreground">
+                            {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+                        </span>
+                    </Link>
 
-                        <div className="flex items-center gap-3 text-muted-foreground text-xs">
-                            <div className="flex items-center gap-1">
-                                <Heart className="h-3 w-3" />
-                                <span>{post.likesCount}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                                <MessageCircle className="h-3 w-3" />
-                                <span>{post.commentsCount}</span>
-                            </div>
+                    <div className="flex items-center gap-3 text-muted-foreground text-xs">
+                        <div className="flex items-center gap-1">
+                            <ThumbsUp className="h-3 w-3" />
+                            <span>{post.likesCount}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                            <MessageCircle className="h-3 w-3" />
+                            <span>{post.commentsCount}</span>
                         </div>
                     </div>
                 </div>

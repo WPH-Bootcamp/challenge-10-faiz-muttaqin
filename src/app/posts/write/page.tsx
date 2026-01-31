@@ -124,30 +124,6 @@ export default function WritePostPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="border-b">
-        <div className="container mx-auto max-w-4xl px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon" asChild>
-                <Link href="/">
-                  <ArrowLeft className="h-5 w-5" />
-                </Link>
-              </Button>
-              <h1 className="text-xl font-semibold">Write Post</h1>
-            </div>
-            {user && (
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">{user.name}</span>
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src={user.avatarUrl} alt={user.name} />
-                  <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
-                </Avatar>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-
       <div className="container mx-auto max-w-4xl px-4 py-8">
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
