@@ -1,24 +1,114 @@
-import type { Metadata } from "next";
+"use client";
 
-type Props = {
-  params: Promise<{ username: string }>;
-};
+import { useEffect, useState } from "react";
+import { getUserByUsername, getPostsByUsername } from "@/lib/api";
+import type { Post, User } from "@/types/blog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/ui/card";
+import { PostCard } from "@/components/post-card";
+import { LoadingSpinner } from "@/components/loading-spinner";
+import { Alert, AlertDescription } from "@/ui/alert";
+import { AlertCircle, Mail } from "lucide-react";
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { username } = await params;
-  return {
-    title: `@${username} - Blog App`,
-    description: `View ${username}'s profile`,
-  };
-}
+export default function UserProfilePage({ params }: { params: { username: string } }) {
+  const [user, setUser] = useState<User | null>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-export default async function UserProfilePage({ params }: Props) {
-  const { username } = await params;
-  
+  useEffect(() => {
+    Promise.all([
+      getUserByUsername(params.username),
+      getPostsByUsername(params.username),
+    ])
+      .then(([userData, postsData]) => {
+        setUser(userData);
+        setPosts(postsData);
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "Failed to load profile");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [params.username]);
+
+  if (loading) {
+    return <LoadingSpinner />;
+  }
+
+  if (error || !user) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error || "User not found"}</AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">@{username}</h1>
-      {/* User profile and posts will be displayed here */}
+    <div className="min-h-screen">
+      <div className="container mx-auto px-4 py-8">
+        {/* Profile Header */}
+        <Card className="mb-8">
+          <CardContent className="pt-6">
+            <div className="flex flex-col md:flex-row items-start gap-6">
+              <Avatar className="h-24 w-24">
+                <AvatarImage src={user.avatar} alt={user.username} />
+                <AvatarFallback className="text-2xl">
+                  {user.username.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+
+              <div className="flex-1">
+                <h1 className="text-3xl font-bold mb-2">@{user.username}</h1>
+                
+                {user.email && (
+                  <p className="text-muted-foreground flex items-center gap-2 mb-4">
+                    <Mail className="h-4 w-4" />
+                    {user.email}
+                  </p>
+                )}
+
+                {user.bio && (
+                  <p className="text-muted-foreground mb-4">{user.bio}</p>
+                )}
+
+                <div className="flex gap-4 text-sm">
+                  <div>
+                    <span className="font-semibold">{posts.length}</span>{" "}
+                    <span className="text-muted-foreground">posts</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Posts Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Posts by @{user.username}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {posts.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">
+                  This user hasn&apos;t written any posts yet.
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {posts.map((post) => (
+                  <PostCard key={post.id} post={post} />
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

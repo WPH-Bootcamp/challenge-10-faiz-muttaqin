@@ -116,19 +116,23 @@ export async function updatePassword(
 // ==================== Posts API ====================
 
 export async function getRecommendedPosts(): Promise<Post[]> {
-  return fetchAPI<Post[]>("/posts/recommended");
+  const response = await fetchAPI<{ data: Post[] } | Post[]>("/posts/recommended");
+  return Array.isArray(response) ? response : response.data;
 }
 
 export async function getMostLikedPosts(): Promise<Post[]> {
-  return fetchAPI<Post[]>("/posts/most-liked");
+  const response = await fetchAPI<{ data: Post[] } | Post[]>("/posts/most-liked");
+  return Array.isArray(response) ? response : response.data;
 }
 
 export async function getMyPosts(token: string): Promise<Post[]> {
-  return fetchAPI<Post[]>("/posts/my-posts", { token });
+  const response = await fetchAPI<{ data: Post[] } | Post[]>("/posts/my-posts", { token });
+  return Array.isArray(response) ? response : response.data;
 }
 
 export async function searchPosts(query: string): Promise<Post[]> {
-  return fetchAPI<Post[]>(`/posts/search?q=${encodeURIComponent(query)}`);
+  const response = await fetchAPI<{ data: Post[] } | Post[]>(`/posts/search?q=${encodeURIComponent(query)}`);
+  return Array.isArray(response) ? response : response.data;
 }
 
 export async function getPostById(id: string): Promise<Post> {
@@ -136,11 +140,13 @@ export async function getPostById(id: string): Promise<Post> {
 }
 
 export async function getPostsByUsername(username: string): Promise<Post[]> {
-  return fetchAPI<Post[]>(`/posts/by-username/${username}`);
+  const response = await fetchAPI<{ data: Post[] } | Post[]>(`/posts/by-username/${username}`);
+  return Array.isArray(response) ? response : response.data;
 }
 
 export async function getPostsByUserId(userId: string): Promise<Post[]> {
-  return fetchAPI<Post[]>(`/posts/by-user/${userId}`);
+  const response = await fetchAPI<{ data: Post[] } | Post[]>(`/posts/by-user/${userId}`);
+  return Array.isArray(response) ? response : response.data;
 }
 
 export async function createPost(
@@ -181,13 +187,15 @@ export async function likePost(id: string, token: string): Promise<void> {
 }
 
 export async function getPostLikes(id: string): Promise<Like[]> {
-  return fetchAPI<Like[]>(`/posts/${id}/likes`);
+  const response = await fetchAPI<{ data: Like[] } | Like[]>(`/posts/${id}/likes`);
+  return Array.isArray(response) ? response : response.data;
 }
 
 // ==================== Comments API ====================
 
 export async function getPostComments(postId: string): Promise<Comment[]> {
-  return fetchAPI<Comment[]>(`/posts/${postId}/comments`);
+  const response = await fetchAPI<{ data: Comment[] } | Comment[]>(`/posts/${postId}/comments`);
+  return Array.isArray(response) ? response : response.data;
 }
 
 export async function createComment(
