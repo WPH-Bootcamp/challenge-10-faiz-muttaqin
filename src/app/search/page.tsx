@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { searchPosts } from "@/lib/api";
 import type { Post } from "@/types/blog";
@@ -10,7 +10,7 @@ import { Input } from "@/ui/input";
 import { Button } from "@/ui/button";
 import { Search } from "lucide-react";
 
-export default function SearchPage() {
+function SearchContent() {
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("q") || "");
   const [posts, setPosts] = useState<Post[]>([]);
@@ -97,5 +97,13 @@ export default function SearchPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <SearchContent />
+    </Suspense>
   );
 }
