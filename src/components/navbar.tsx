@@ -54,6 +54,11 @@ export function Navbar() {
 
         loadUser();
 
+        // Listen for auth changes (login/logout)
+        const handleAuthChange = () => {
+            loadUser();
+        };
+
         // Listen for storage changes (login/logout from other tabs)
         const handleStorageChange = (e: StorageEvent) => {
             if (e.key === 'authToken') {
@@ -61,8 +66,12 @@ export function Navbar() {
             }
         };
 
+        window.addEventListener('authChange', handleAuthChange);
         window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
+        return () => {
+            window.removeEventListener('authChange', handleAuthChange);
+            window.removeEventListener('storage', handleStorageChange);
+        };
     }, []);
 
     const handleLogout = () => {

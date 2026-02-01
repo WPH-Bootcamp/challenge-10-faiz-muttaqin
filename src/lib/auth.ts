@@ -14,11 +14,15 @@ export function getAuthToken(): string | null {
 export function setAuthToken(token: string): void {
   if (typeof window === "undefined") return;
   localStorage.setItem(TOKEN_KEY, token);
+  // Dispatch custom event to notify components
+  window.dispatchEvent(new Event('authChange'));
 }
 
 export function removeAuthToken(): void {
   if (typeof window === "undefined") return;
   localStorage.removeItem(TOKEN_KEY);
+  // Dispatch custom event to notify components
+  window.dispatchEvent(new Event('authChange'));
 }
 
 export function isAuthenticated(): boolean {
