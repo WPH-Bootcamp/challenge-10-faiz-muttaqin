@@ -7,12 +7,10 @@ import { getAuthToken } from "@/lib/auth";
 import type { User } from "@/types/blog";
 import { Button } from "@/ui/button";
 import { Input } from "@/ui/input";
-import { Textarea } from "@/ui/textarea";
 import { Label } from "@/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/ui/avatar";
 import { Alert, AlertDescription } from "@/ui/alert";
-import { AlertCircle, ArrowLeft, Upload } from "lucide-react";
-import Link from "next/link";
+import { AlertCircle, Upload } from "lucide-react";
+import { RichTextEditor, sanitizeHtml } from "@/components/rich-text-editor";
 
 export default function WritePostPage() {
   const router = useRouter();
@@ -105,7 +103,9 @@ export default function WritePostPage() {
     try {
       const data = new FormData();
       data.append("title", formData.title);
-      data.append("content", formData.content);
+      // Sanitize content before submitting
+      const sanitizedContent = sanitizeHtml(formData.content);
+      data.append("content", sanitizedContent);
       if (formData.tags) {
         data.append("tags", formData.tags);
       }
@@ -149,15 +149,11 @@ export default function WritePostPage() {
 
           <div className="space-y-2">
             <Label htmlFor="content">Content</Label>
-            <Textarea
-              id="content"
-              placeholder="Enter your content"
+            <RichTextEditor
               value={formData.content}
-              onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-              required
+              onChange={(content) => setFormData({ ...formData, content })}
+              placeholder="Enter your content"
               disabled={loading}
-              rows={12}
-              className="text-base"
             />
           </div>
 
